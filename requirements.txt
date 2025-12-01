@@ -1,0 +1,35 @@
+# Bibliotecas necessárias para o projeto
+
+# Framework web para criar a API
+Flask==3.0.3
+
+# WerkZeug compatível com Flask 3
+Werkzeug==3.0.4
+
+# Para fazer requisições HTTP (baixar páginas web)
+requests==2.27.1
+
+# Para extrair dados de HTML (web scraping)
+beautifulsoup4==4.10.0
+
+# Para documentação da API (Swagger) - desabilitado para compatibilidade
+# flasgger==0.9.5
+
+# Para testes (opcional)
+pytest==8.3.3
+
+# Para linting (estilo de código)
+flake8==7.0.0
+
+# Para cache
+Flask-Caching==2.3.1
+
+# Para banco de dados (SQLAlchemy)
+Flask-SQLAlchemy==3.1.1
+
+# Para variáveis de ambiente
+python-dotenv==1.2.1
+
+# Para documentação Swagger/OpenAPI
+flask-apispec==0.11.4
+apispec[yaml]==6.8.4

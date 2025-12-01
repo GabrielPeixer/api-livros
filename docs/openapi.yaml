@@ -1,0 +1,136 @@
+openapi: 3.0.0
+info:
+  title: Book Recommendation API
+  version: 1.0.0
+  description: API for book recommendations, providing endpoints for book data and statistics.
+servers:
+  - url: http://localhost:5000
+paths:
+  /books:
+    get:
+      summary: Get a list of books
+      responses:
+        '200':
+          description: A list of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+    post:
+      summary: Add a new book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '201':
+          description: Book created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+  /books/{id}:
+    get:
+      summary: Get a book by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the book
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A single book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Book not found
+    put:
+      summary: Update a book by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the book
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '200':
+          description: Book updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Book not found
+    delete:
+      summary: Delete a book by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the book
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Book deleted
+        '404':
+          description: Book not found
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: API is running
+  /stats:
+    get:
+      summary: Get statistics about books
+      responses:
+        '200':
+          description: Statistics about books
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalBooks:
+                    type: integer
+                  averageRating:
+                    type: number
+                    format: float
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        author:
+          type: string
+        genre:
+          type: string
+        price:
+          type: string
+        rating:
+          type: number
+          format: float
+        description:
+          type: string
+        imageUrl:
+          type: string

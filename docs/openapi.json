@@ -1,0 +1,278 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Livros",
+    "version": "1.0.0",
+    "description": "API para recomendação de livros com scraping e estatísticas"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Servidor de desenvolvimento"
+    }
+  ],
+  "paths": {
+    "/api/health": {
+      "get": {
+        "summary": "Verifica se a API está funcionando",
+        "responses": {
+          "200": {
+            "description": "API operacional",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "estado": {"type": "string", "example": "sucesso"},
+                    "dados": {
+                      "type": "object",
+                      "properties": {
+                        "servico": {"type": "string", "example": "api-livros"},
+                        "estado": {"type": "string", "example": "operacional"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ping": {
+      "get": {
+        "summary": "Testa a conexão com a API",
+        "responses": {
+          "200": {
+            "description": "Conexão OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "estado": {"type": "string", "example": "sucesso"},
+                    "dados": {
+                      "type": "object",
+                      "properties": {
+                        "mensagem": {"type": "string", "example": "pong"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/books/": {
+      "get": {
+        "summary": "Lista todos os livros com paginação",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {"type": "integer", "default": 1}
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {"type": "integer", "default": 20}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de livros",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "estado": {"type": "string", "example": "sucesso"},
+                    "dados": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {"type": "string"},
+                          "price": {"type": "number"},
+                          "rating": {"type": "integer"},
+                          "availability": {"type": "string"}
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "pagina": {"type": "integer"},
+                        "por_pagina": {"type": "integer"},
+                        "total_itens": {"type": "integer"},
+                        "total_paginas": {"type": "integer"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/books/{title}": {
+      "get": {
+        "summary": "Busca um livro pelo título",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Livro encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "estado": {"type": "string", "example": "sucesso"},
+                    "dados": {
+                      "type": "object",
+                      "properties": {
+                        "title": {"type": "string"},
+                        "price": {"type": "number"},
+                        "rating": {"type": "integer"},
+                        "availability": {"type": "string"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Livro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "estado": {"type": "string", "example": "erro"},
+                    "mensagem": {"type": "string", "example": "Livro não encontrado"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/books/categories": {
+      "get": {
+        "summary": "Lista todas as categorias disponíveis",
+        "responses": {
+          "200": {
+            "description": "Lista de categorias",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "estado": {"type": "string", "example": "sucesso"},
+                    "dados": {
+                      "type": "array",
+                      "items": {"type": "string"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stats/": {
+      "get": {
+        "summary": "Retorna estatísticas básicas dos livros",
+        "responses": {
+          "200": {
+            "description": "Estatísticas calculadas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "estado": {"type": "string", "example": "sucesso"},
+                    "dados": {
+                      "type": "object",
+                      "properties": {
+                        "total_livros": {"type": "integer"},
+                        "preco_medio": {"type": "number"},
+                        "preco_minimo": {"type": "number"},
+                        "preco_maximo": {"type": "number"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stats/category/{category}": {
+      "get": {
+        "summary": "Retorna estatísticas de uma categoria específica",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estatísticas da categoria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "estado": {"type": "string", "example": "sucesso"},
+                    "dados": {
+                      "type": "object",
+                      "properties": {
+                        "total_livros": {"type": "integer"},
+                        "preco_medio": {"type": "number"},
+                        "preco_minimo": {"type": "number"},
+                        "preco_maximo": {"type": "number"},
+                        "categoria": {"type": "string"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Categoria não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "estado": {"type": "string", "example": "erro"},
+                    "mensagem": {"type": "string", "example": "Categoria não encontrada"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
