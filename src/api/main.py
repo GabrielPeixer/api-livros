@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from flask import Flask, send_from_directory  # noqa: E402
 from api.routers.books import router as books_router  # noqa: E402
+from api.routers.categories import router as categories_router  # noqa: E402
 from api.routers.health import router as health_router  # noqa: E402
 from api.routers.stats import router as stats_router  # noqa: E402
 from core.config import Config  # noqa: E402
@@ -43,6 +44,7 @@ def create_app(config_class=Config):
 
     # Registra as rotas
     app.register_blueprint(books_router)
+    app.register_blueprint(categories_router)
     app.register_blueprint(health_router)
     app.register_blueprint(stats_router)
 

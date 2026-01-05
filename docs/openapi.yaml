@@ -24,17 +24,19 @@ servers:
 tags:
   - name: Livros
     description: Operações relacionadas a livros
+  - name: Categorias
+    description: Categorias de livros
   - name: Estatísticas
     description: Estatísticas sobre os livros
   - name: Saúde
     description: Verificação de saúde da API
 
 paths:
-  /api/books/:
+  /api/v1/books:
     get:
       tags:
         - Livros
-      summary: Listar livros
+      summary: Listar todos os livros
       description: Retorna uma lista paginada de todos os livros disponíveis.
       parameters:
         - name: page
@@ -64,12 +66,14 @@ paths:
               example:
                 estado: sucesso
                 dados:
-                  - title: "A Light in the Attic"
+                  - id: 1
+                    title: "A Light in the Attic"
                     price: 51.77
                     availability: "In stock"
                     rating: 3
                     category: "Poetry"
-                  - title: "Tipping the Velvet"
+                  - id: 2
+                    title: "Tipping the Velvet"
                     price: 53.74
                     availability: "In stock"
                     rating: 1
@@ -85,24 +89,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErroResponse'
-              example:
-                estado: erro
-                mensagem: "Parâmetros de paginação inválidos."
 
-  /api/books/{title}:
+  /api/v1/books/{id}:
     get:
       tags:
         - Livros
-      summary: Buscar livro por título
-      description: Retorna os detalhes de um livro específico pelo título.
+      summary: Buscar livro por ID
+      description: Retorna os detalhes completos de um livro específico pelo ID.
       parameters:
-        - name: title
+        - name: id
           in: path
-          description: Título do livro (case insensitive)
+          description: ID do livro (1-indexed)
           required: true
           schema:
-            type: string
-          example: "A Light in the Attic"
+            type: integer
+            minimum: 1
+          example: 1
       responses:
         '200':
           description: Livro encontrado
@@ -113,6 +115,7 @@ paths:
               example:
                 estado: sucesso
                 dados:
+                  id: 1
                   title: "A Light in the Attic"
                   price: 51.77
                   availability: "In stock"
@@ -128,11 +131,51 @@ paths:
                 estado: erro
                 mensagem: "Livro não encontrado"
 
-  /api/books/categories:
+  /api/v1/books/search:
     get:
       tags:
         - Livros
-      summary: Listar categorias
+      summary: Buscar livros por título e/ou categoria
+      description: Busca livros com filtros opcionais de título e categoria.
+      parameters:
+        - name: title
+          in: query
+          description: Título ou parte do título do livro
+          required: false
+          schema:
+            type: string
+          example: "Light"
+        - name: category
+          in: query
+          description: Categoria ou parte da categoria
+          required: false
+          schema:
+            type: string
+          example: "Poetry"
+      responses:
+        '200':
+          description: Lista de livros encontrados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+              example:
+                estado: sucesso
+                dados:
+                  - id: 1
+                    title: "A Light in the Attic"
+                    price: 51.77
+                    availability: "In stock"
+                    rating: 3
+                    category: "Poetry"
+                meta:
+                  total_resultados: 1
+
+  /api/v1/categories:
+    get:
+      tags:
+        - Categorias
+      summary: Listar todas as categorias
       description: Retorna a lista de todas as categorias de livros disponíveis.
       responses:
         '200':
@@ -150,7 +193,7 @@ paths:
                   - "Sequential Art"
                   - "Classics"
 
-  /api/stats/:
+  /api/v1/stats:
     get:
       tags:
         - Estatísticas
@@ -171,7 +214,7 @@ paths:
                   preco_minimo: 10.00
                   preco_maximo: 59.99
 
-  /api/stats/category/{category}:
+  /api/v1/stats/category/{category}:
     get:
       tags:
         - Estatísticas
@@ -206,16 +249,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErroResponse'
-              example:
-                estado: erro
-                mensagem: "Categoria não encontrada"
 
-  /api/health:
+  /api/v1/health:
     get:
       tags:
         - Saúde
       summary: Verificar saúde da API
-      description: Retorna o estado operacional da API.
+      description: Verifica status da API e conectividade com os dados.
       responses:
         '200':
           description: API operacional
@@ -227,9 +267,14 @@ paths:
                 estado: sucesso
                 dados:
                   servico: "api-livros"
+                  versao: "v1"
                   estado: "operacional"
+                  dados:
+                    arquivo_existe: true
+                    status: "ok"
+                    total_registros: 100
 
-  /api/ping:
+  /api/v1/ping:
     get:
       tags:
         - Saúde
@@ -251,6 +296,10 @@ components:
     Book:
       type: object
       properties:
+        id:
+          type: integer
+          description: ID do livro
+          example: 1
         title:
           type: string
           description: Título do livro
@@ -281,7 +330,6 @@ components:
         estado:
           type: string
           enum: [sucesso]
-          example: sucesso
         dados:
           type: array
           items:
@@ -291,16 +339,12 @@ components:
           properties:
             pagina:
               type: integer
-              example: 1
             por_pagina:
               type: integer
-              example: 20
             total_itens:
               type: integer
-              example: 100
             total_paginas:
               type: integer
-              example: 5
 
     BookResponse:
       type: object
@@ -308,9 +352,24 @@ components:
         estado:
           type: string
           enum: [sucesso]
-          example: sucesso
         dados:
           $ref: '#/components/schemas/Book'
+
+    SearchResponse:
+      type: object
+      properties:
+        estado:
+          type: string
+          enum: [sucesso]
+        dados:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book'
+        meta:
+          type: object
+          properties:
+            total_resultados:
+              type: integer
 
     CategoriasResponse:
       type: object
@@ -318,12 +377,10 @@ components:
         estado:
           type: string
           enum: [sucesso]
-          example: sucesso
         dados:
           type: array
           items:
             type: string
-          example: ["Travel", "Mystery", "Historical Fiction"]
 
     StatsResponse:
       type: object
@@ -331,25 +388,20 @@ components:
         estado:
           type: string
           enum: [sucesso]
-          example: sucesso
         dados:
           type: object
           properties:
             total_livros:
               type: integer
-              example: 100
             preco_medio:
               type: number
               format: float
-              example: 35.07
             preco_minimo:
               type: number
               format: float
-              example: 10.00
             preco_maximo:
               type: number
               format: float
-              example: 59.99
 
     StatsCategoriaResponse:
       type: object
@@ -357,28 +409,22 @@ components:
         estado:
           type: string
           enum: [sucesso]
-          example: sucesso
         dados:
           type: object
           properties:
             total_livros:
               type: integer
-              example: 11
             preco_medio:
               type: number
               format: float
-              example: 42.50
             preco_minimo:
               type: number
               format: float
-              example: 15.00
             preco_maximo:
               type: number
               format: float
-              example: 55.00
             categoria:
               type: string
-              example: "Travel"
 
     HealthResponse:
       type: object
@@ -386,16 +432,24 @@ components:
         estado:
           type: string
           enum: [sucesso]
-          example: sucesso
         dados:
           type: object
           properties:
             servico:
               type: string
-              example: "api-livros"
+            versao:
+              type: string
             estado:
               type: string
-              example: "operacional"
+            dados:
+              type: object
+              properties:
+                arquivo_existe:
+                  type: boolean
+                status:
+                  type: string
+                total_registros:
+                  type: integer
 
     PingResponse:
       type: object
@@ -403,10 +457,8 @@ components:
         estado:
           type: string
           enum: [sucesso]
-          example: sucesso
         dados:
           type: string
-          example: "pong"
 
     ErroResponse:
       type: object
@@ -414,7 +466,5 @@ components:
         estado:
           type: string
           enum: [erro]
-          example: erro
         mensagem:
           type: string
-          example: "Descrição do erro"

@@ -25,6 +25,10 @@
       "description": "Operações relacionadas a livros"
     },
     {
+      "name": "Categorias",
+      "description": "Categorias de livros"
+    },
+    {
       "name": "Estatísticas",
       "description": "Estatísticas sobre os livros"
     },
@@ -34,12 +38,12 @@
     }
   ],
   "paths": {
-    "/api/books/": {
+    "/api/v1/books": {
       "get": {
         "tags": [
           "Livros"
         ],
-        "summary": "Listar livros",
+        "summary": "Listar todos os livros",
         "description": "Retorna uma lista paginada de todos os livros disponíveis.",
         "parameters": [
           {
@@ -78,6 +82,7 @@
                   "estado": "sucesso",
                   "dados": [
                     {
+                      "id": 1,
                       "title": "A Light in the Attic",
                       "price": 51.77,
                       "availability": "In stock",
@@ -85,6 +90,7 @@
                       "category": "Poetry"
                     },
                     {
+                      "id": 2,
                       "title": "Tipping the Velvet",
                       "price": 53.74,
                       "availability": "In stock",
@@ -108,10 +114,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErroResponse"
-                },
-                "example": {
-                  "estado": "erro",
-                  "mensagem": "Parâmetros de paginação inválidos."
                 }
               }
             }
@@ -119,23 +121,24 @@
         }
       }
     },
-    "/api/books/{title}": {
+    "/api/v1/books/{id}": {
       "get": {
         "tags": [
           "Livros"
         ],
-        "summary": "Buscar livro por título",
-        "description": "Retorna os detalhes de um livro específico pelo título.",
+        "summary": "Buscar livro por ID",
+        "description": "Retorna os detalhes completos de um livro específico pelo ID.",
         "parameters": [
           {
-            "name": "title",
+            "name": "id",
             "in": "path",
-            "description": "Título do livro (case insensitive)",
+            "description": "ID do livro (1-indexed)",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "minimum": 1
             },
-            "example": "A Light in the Attic"
+            "example": 1
           }
         ],
         "responses": {
@@ -149,6 +152,7 @@
                 "example": {
                   "estado": "sucesso",
                   "dados": {
+                    "id": 1,
                     "title": "A Light in the Attic",
                     "price": 51.77,
                     "availability": "In stock",
@@ -176,12 +180,71 @@
         }
       }
     },
-    "/api/books/categories": {
+    "/api/v1/books/search": {
       "get": {
         "tags": [
           "Livros"
         ],
-        "summary": "Listar categorias",
+        "summary": "Buscar livros por título e/ou categoria",
+        "description": "Busca livros com filtros opcionais de título e categoria.",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "description": "Título ou parte do título do livro",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Light"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Categoria ou parte da categoria",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Poetry"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de livros encontrados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                },
+                "example": {
+                  "estado": "sucesso",
+                  "dados": [
+                    {
+                      "id": 1,
+                      "title": "A Light in the Attic",
+                      "price": 51.77,
+                      "availability": "In stock",
+                      "rating": 3,
+                      "category": "Poetry"
+                    }
+                  ],
+                  "meta": {
+                    "total_resultados": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/categories": {
+      "get": {
+        "tags": [
+          "Categorias"
+        ],
+        "summary": "Listar todas as categorias",
         "description": "Retorna a lista de todas as categorias de livros disponíveis.",
         "responses": {
           "200": {
@@ -207,7 +270,7 @@
         }
       }
     },
-    "/api/stats/": {
+    "/api/v1/stats": {
       "get": {
         "tags": [
           "Estatísticas"
@@ -237,7 +300,7 @@
         }
       }
     },
-    "/api/stats/category/{category}": {
+    "/api/v1/stats/category/{category}": {
       "get": {
         "tags": [
           "Estatísticas"
@@ -283,10 +346,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErroResponse"
-                },
-                "example": {
-                  "estado": "erro",
-                  "mensagem": "Categoria não encontrada"
                 }
               }
             }
@@ -294,13 +353,13 @@
         }
       }
     },
-    "/api/health": {
+    "/api/v1/health": {
       "get": {
         "tags": [
           "Saúde"
         ],
         "summary": "Verificar saúde da API",
-        "description": "Retorna o estado operacional da API.",
+        "description": "Verifica status da API e conectividade com os dados.",
         "responses": {
           "200": {
             "description": "API operacional",
@@ -313,7 +372,13 @@
                   "estado": "sucesso",
                   "dados": {
                     "servico": "api-livros",
-                    "estado": "operacional"
+                    "versao": "v1",
+                    "estado": "operacional",
+                    "dados": {
+                      "arquivo_existe": true,
+                      "status": "ok",
+                      "total_registros": 100
+                    }
                   }
                 }
               }
@@ -322,7 +387,7 @@
         }
       }
     },
-    "/api/ping": {
+    "/api/v1/ping": {
       "get": {
         "tags": [
           "Saúde"
@@ -353,6 +418,11 @@
       "Book": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID do livro",
+            "example": 1
+          },
           "title": {
             "type": "string",
             "description": "Título do livro",
@@ -390,8 +460,7 @@
             "type": "string",
             "enum": [
               "sucesso"
-            ],
-            "example": "sucesso"
+            ]
           },
           "dados": {
             "type": "array",
@@ -403,20 +472,16 @@
             "type": "object",
             "properties": {
               "pagina": {
-                "type": "integer",
-                "example": 1
+                "type": "integer"
               },
               "por_pagina": {
-                "type": "integer",
-                "example": 20
+                "type": "integer"
               },
               "total_itens": {
-                "type": "integer",
-                "example": 100
+                "type": "integer"
               },
               "total_paginas": {
-                "type": "integer",
-                "example": 5
+                "type": "integer"
               }
             }
           }
@@ -429,11 +494,35 @@
             "type": "string",
             "enum": [
               "sucesso"
-            ],
-            "example": "sucesso"
+            ]
           },
           "dados": {
             "$ref": "#/components/schemas/Book"
+          }
+        }
+      },
+      "SearchResponse": {
+        "type": "object",
+        "properties": {
+          "estado": {
+            "type": "string",
+            "enum": [
+              "sucesso"
+            ]
+          },
+          "dados": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Book"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total_resultados": {
+                "type": "integer"
+              }
+            }
           }
         }
       },
@@ -444,19 +533,13 @@
             "type": "string",
             "enum": [
               "sucesso"
-            ],
-            "example": "sucesso"
+            ]
           },
           "dados": {
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "example": [
-              "Travel",
-              "Mystery",
-              "Historical Fiction"
-            ]
+            }
           }
         }
       },
@@ -467,30 +550,25 @@
             "type": "string",
             "enum": [
               "sucesso"
-            ],
-            "example": "sucesso"
+            ]
           },
           "dados": {
             "type": "object",
             "properties": {
               "total_livros": {
-                "type": "integer",
-                "example": 100
+                "type": "integer"
               },
               "preco_medio": {
                 "type": "number",
-                "format": "float",
-                "example": 35.07
+                "format": "float"
               },
               "preco_minimo": {
                 "type": "number",
-                "format": "float",
-                "example": 10.0
+                "format": "float"
               },
               "preco_maximo": {
                 "type": "number",
-                "format": "float",
-                "example": 59.99
+                "format": "float"
               }
             }
           }
@@ -503,34 +581,28 @@
             "type": "string",
             "enum": [
               "sucesso"
-            ],
-            "example": "sucesso"
+            ]
           },
           "dados": {
             "type": "object",
             "properties": {
               "total_livros": {
-                "type": "integer",
-                "example": 11
+                "type": "integer"
               },
               "preco_medio": {
                 "type": "number",
-                "format": "float",
-                "example": 42.5
+                "format": "float"
               },
               "preco_minimo": {
                 "type": "number",
-                "format": "float",
-                "example": 15.0
+                "format": "float"
               },
               "preco_maximo": {
                 "type": "number",
-                "format": "float",
-                "example": 55.0
+                "format": "float"
               },
               "categoria": {
-                "type": "string",
-                "example": "Travel"
+                "type": "string"
               }
             }
           }
@@ -543,19 +615,33 @@
             "type": "string",
             "enum": [
               "sucesso"
-            ],
-            "example": "sucesso"
+            ]
           },
           "dados": {
             "type": "object",
             "properties": {
               "servico": {
-                "type": "string",
-                "example": "api-livros"
+                "type": "string"
+              },
+              "versao": {
+                "type": "string"
               },
               "estado": {
-                "type": "string",
-                "example": "operacional"
+                "type": "string"
+              },
+              "dados": {
+                "type": "object",
+                "properties": {
+                  "arquivo_existe": {
+                    "type": "boolean"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "total_registros": {
+                    "type": "integer"
+                  }
+                }
               }
             }
           }
@@ -568,12 +654,10 @@
             "type": "string",
             "enum": [
               "sucesso"
-            ],
-            "example": "sucesso"
+            ]
           },
           "dados": {
-            "type": "string",
-            "example": "pong"
+            "type": "string"
           }
         }
       },
@@ -584,12 +668,10 @@
             "type": "string",
             "enum": [
               "erro"
-            ],
-            "example": "erro"
+            ]
           },
           "mensagem": {
-            "type": "string",
-            "example": "Descrição do erro"
+            "type": "string"
           }
         }
       }

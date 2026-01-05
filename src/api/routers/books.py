@@ -1,5 +1,6 @@
 """
 Rotas da API para gerenciamento de livros.
+Versão: v1
 """
 import logging
 from flask import Blueprint, request, Response
@@ -7,7 +8,6 @@ from typing import Tuple
 
 from api.utils import (
     carregar_livros,
-    lista_categorias,
     paginar_lista,
     resposta_erro,
     resposta_sucesso,
@@ -17,14 +17,14 @@ from core.cache import cache
 # Configura logging
 logger = logging.getLogger(__name__)
 
-router = Blueprint('books', __name__, url_prefix='/api/books')
+router = Blueprint('books', __name__, url_prefix='/api/v1/books')
 
 
 @router.route('/', methods=['GET'])
 @cache.cached(timeout=300, query_string=True)
 def get_books() -> Tuple[Response, int]:
     """
-    Lista todos os livros com paginação.
+    Lista todos os livros disponíveis na base de dados.
 
     ---
     get:
@@ -41,38 +41,6 @@ def get_books() -> Tuple[Response, int]:
       responses:
         200:
           description: Lista de livros
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  estado:
-                    type: string
-                    example: sucesso
-                  dados:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        title:
-                          type: string
-                        price:
-                          type: number
-                        rating:
-                          type: integer
-                        availability:
-                          type: string
-                  meta:
-                    type: object
-                    properties:
-                      pagina:
-                        type: integer
-                      por_pagina:
-                        type: integer
-                      total_itens:
-                        type: integer
-                      total_paginas:
-                        type: integer
     """
     try:
         # Carrega a lista de livros do CSV
@@ -116,116 +84,108 @@ def get_books() -> Tuple[Response, int]:
         )
 
 
-@router.route('/<string:title>', methods=['GET'])
-def get_book_by_title(title: str) -> Tuple[Response, int]:
+@router.route('/<int:book_id>', methods=['GET'])
+def get_book_by_id(book_id: int) -> Tuple[Response, int]:
     """
-    Busca um livro pelo título.
+    Retorna detalhes completos de um livro específico pelo ID.
 
     ---
     get:
       description: Retorna detalhes de um livro específico
       parameters:
-        - name: title
+        - name: book_id
           in: path
-          type: string
+          type: integer
           required: true
       responses:
         200:
           description: Livro encontrado
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  estado:
-                    type: string
-                    example: sucesso
-                  dados:
-                    type: object
-                    properties:
-                      title:
-                        type: string
-                      price:
-                        type: number
-                      rating:
-                        type: integer
-                      availability:
-                        type: string
         404:
           description: Livro não encontrado
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  estado:
-                    type: string
-                    example: erro
-                  mensagem:
-                    type: string
-                    example: Livro não encontrado
     """
     try:
         # Carrega a lista de livros
         livros = carregar_livros()
 
-        # Procura o livro pelo título (case insensitive)
-        # Nota: Isso não é eficiente para grandes datasets,
-        # idealmente usaríamos um banco de dados ou índice
-        for livro in livros:
-            if livro.get('title', '').lower() == title.lower():
-                # Se encontrou, retorna o livro
-                return resposta_sucesso(dados=livro)
+        # Verifica se o ID é válido (1-indexed)
+        if book_id < 1 or book_id > len(livros):
+            logger.info(f"Livro não encontrado com ID: {book_id}")
+            return resposta_erro('Livro não encontrado', codigo_status=404)
 
-        # Se não encontrou, retorna erro
-        logger.info(f"Livro não encontrado: {title}")
-        return resposta_erro('Livro não encontrado', codigo_status=404)
+        # Retorna o livro pelo índice (ID é 1-indexed)
+        livro = livros[book_id - 1]
+        livro['id'] = book_id
+        return resposta_sucesso(dados=livro)
 
     except Exception as e:
-        logger.error(f"Erro ao buscar livro '{title}': {e}")
+        logger.error(f"Erro ao buscar livro com ID {book_id}: {e}")
         return resposta_erro(
             "Erro interno ao processar a requisição.",
             codigo_status=500
         )
 
 
-@router.route('/categories', methods=['GET'])
-def get_categories() -> Tuple[Response, int]:
+@router.route('/search', methods=['GET'])
+@cache.cached(timeout=300, query_string=True)
+def search_books() -> Tuple[Response, int]:
     """
-    Lista todas as categorias disponíveis.
+    Busca livros por título e/ou categoria.
 
     ---
     get:
-      description: Retorna lista de categorias únicas
+      description: Busca livros com filtros
+      parameters:
+        - name: title
+          in: query
+          type: string
+          required: false
+        - name: category
+          in: query
+          type: string
+          required: false
       responses:
         200:
-          description: Lista de categorias
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  estado:
-                    type: string
-                    example: sucesso
-                  dados:
-                    type: array
-                    items:
-                      type: string
-                      example: Travel
+          description: Lista de livros encontrados
     """
     try:
         # Carrega a lista de livros
         livros = carregar_livros()
 
-        # Pega as categorias únicas
-        categorias = lista_categorias(livros)
+        # Pega os parâmetros de busca
+        titulo_busca = request.args.get('title', '').strip().lower()
+        categoria_busca = request.args.get('category', '').strip().lower()
 
-        # Retorna a lista de categorias
-        return resposta_sucesso(dados=categorias)
+        # Se não tiver nenhum parâmetro, retorna todos
+        if not titulo_busca and not categoria_busca:
+            return resposta_sucesso(
+                dados=livros,
+                meta={"total_resultados": len(livros)}
+            )
+
+        # Filtra os livros
+        livros_filtrados = []
+        for livro in livros:
+            titulo_livro = livro.get('title', '').lower()
+            categoria_livro = livro.get('category', '').lower()
+
+            # Verifica se o título contém a busca
+            titulo_match = not titulo_busca or titulo_busca in titulo_livro
+            # Verifica se a categoria contém a busca
+            categoria_match = (
+                not categoria_busca or categoria_busca in categoria_livro
+            )
+
+            # Se ambos os critérios forem atendidos, adiciona
+            if titulo_match and categoria_match:
+                livros_filtrados.append(livro)
+
+        return resposta_sucesso(
+            dados=livros_filtrados,
+            meta={"total_resultados": len(livros_filtrados)}
+        )
 
     except Exception as e:
-        logger.error(f"Erro ao listar categorias: {e}")
+        logger.error(f"Erro ao buscar livros: {e}")
         return resposta_erro(
             "Erro interno ao processar a requisição.",
             codigo_status=500

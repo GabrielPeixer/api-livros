@@ -1,5 +1,6 @@
 """
 Rotas para estatísticas dos livros.
+Versão: v1
 """
 import logging
 from flask import Blueprint, Response
@@ -17,7 +18,7 @@ from core.cache import cache
 # Configura logging
 logger = logging.getLogger(__name__)
 
-router = Blueprint('stats', __name__, url_prefix='/api/stats')
+router = Blueprint('stats', __name__, url_prefix='/api/v1/stats')
 
 
 @router.route('/', methods=['GET'])
@@ -28,34 +29,10 @@ def get_stats() -> Tuple[Response, int]:
 
     ---
     get:
-      description: Estatísticas gerais dos livros (preço médio, mínimo,
-                   máximo, total)
+      description: Estatísticas gerais dos livros
       responses:
         200:
           description: Estatísticas calculadas
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  estado:
-                    type: string
-                    example: sucesso
-                  dados:
-                    type: object
-                    properties:
-                      total_livros:
-                        type: integer
-                        example: 100
-                      preco_medio:
-                        type: number
-                        example: 35.5
-                      preco_minimo:
-                        type: number
-                        example: 10.0
-                      preco_maximo:
-                        type: number
-                        example: 50.0
     """
     try:
         # Carrega a lista de livros
@@ -99,45 +76,8 @@ def get_category_stats(category: str) -> Tuple[Response, int]:
       responses:
         200:
           description: Estatísticas da categoria
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  estado:
-                    type: string
-                    example: sucesso
-                  dados:
-                    type: object
-                    properties:
-                      total_livros:
-                        type: integer
-                        example: 20
-                      preco_medio:
-                        type: number
-                        example: 25.0
-                      preco_minimo:
-                        type: number
-                        example: 15.0
-                      preco_maximo:
-                        type: number
-                        example: 40.0
-                      categoria:
-                        type: string
-                        example: Travel
         404:
           description: Categoria não encontrada
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  estado:
-                    type: string
-                    example: erro
-                  mensagem:
-                    type: string
-                    example: Categoria não encontrada
     """
     try:
         # Carrega a lista de livros
