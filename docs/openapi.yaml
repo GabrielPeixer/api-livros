@@ -1,136 +1,420 @@
 openapi: 3.0.0
 info:
-  title: Book Recommendation API
+  title: API de Livros
   version: 1.0.0
-  description: API for book recommendations, providing endpoints for book data and statistics.
+  description: |
+    API RESTful para consulta de dados de livros extraídos do site Books to Scrape.
+    
+    Esta API fornece endpoints para:
+    - Listar e buscar livros
+    - Consultar categorias disponíveis
+    - Obter estatísticas gerais e por categoria
+    - Verificar o estado de saúde do serviço
+  contact:
+    name: Gabriel Peixer
+    email: dj.conga@gmail.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
 servers:
   - url: http://localhost:5000
+    description: Servidor de desenvolvimento local
+
+tags:
+  - name: Livros
+    description: Operações relacionadas a livros
+  - name: Estatísticas
+    description: Estatísticas sobre os livros
+  - name: Saúde
+    description: Verificação de saúde da API
+
 paths:
-  /books:
+  /api/books/:
     get:
-      summary: Get a list of books
+      tags:
+        - Livros
+      summary: Listar livros
+      description: Retorna uma lista paginada de todos os livros disponíveis.
+      parameters:
+        - name: page
+          in: query
+          description: Número da página (começa em 1)
+          required: false
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: per_page
+          in: query
+          description: Quantidade de itens por página
+          required: false
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
       responses:
         '200':
-          description: A list of books
+          description: Lista de livros retornada com sucesso
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Book'
-    post:
-      summary: Add a new book
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Book'
-      responses:
-        '201':
-          description: Book created
+                $ref: '#/components/schemas/ListaBooksResponse'
+              example:
+                estado: sucesso
+                dados:
+                  - title: "A Light in the Attic"
+                    price: 51.77
+                    availability: "In stock"
+                    rating: 3
+                    category: "Poetry"
+                  - title: "Tipping the Velvet"
+                    price: 53.74
+                    availability: "In stock"
+                    rating: 1
+                    category: "Historical Fiction"
+                meta:
+                  pagina: 1
+                  por_pagina: 20
+                  total_itens: 100
+                  total_paginas: 5
+        '400':
+          description: Parâmetros de paginação inválidos
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Book'
-  /books/{id}:
+                $ref: '#/components/schemas/ErroResponse'
+              example:
+                estado: erro
+                mensagem: "Parâmetros de paginação inválidos."
+
+  /api/books/{title}:
     get:
-      summary: Get a book by ID
+      tags:
+        - Livros
+      summary: Buscar livro por título
+      description: Retorna os detalhes de um livro específico pelo título.
       parameters:
-        - name: id
+        - name: title
           in: path
+          description: Título do livro (case insensitive)
           required: true
-          description: The ID of the book
           schema:
             type: string
+          example: "A Light in the Attic"
       responses:
         '200':
-          description: A single book
+          description: Livro encontrado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Book'
+                $ref: '#/components/schemas/BookResponse'
+              example:
+                estado: sucesso
+                dados:
+                  title: "A Light in the Attic"
+                  price: 51.77
+                  availability: "In stock"
+                  rating: 3
+                  category: "Poetry"
         '404':
-          description: Book not found
-    put:
-      summary: Update a book by ID
+          description: Livro não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErroResponse'
+              example:
+                estado: erro
+                mensagem: "Livro não encontrado"
+
+  /api/books/categories:
+    get:
+      tags:
+        - Livros
+      summary: Listar categorias
+      description: Retorna a lista de todas as categorias de livros disponíveis.
+      responses:
+        '200':
+          description: Lista de categorias
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriasResponse'
+              example:
+                estado: sucesso
+                dados:
+                  - "Travel"
+                  - "Mystery"
+                  - "Historical Fiction"
+                  - "Sequential Art"
+                  - "Classics"
+
+  /api/stats/:
+    get:
+      tags:
+        - Estatísticas
+      summary: Estatísticas gerais
+      description: Retorna estatísticas gerais sobre todos os livros.
+      responses:
+        '200':
+          description: Estatísticas calculadas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsResponse'
+              example:
+                estado: sucesso
+                dados:
+                  total_livros: 100
+                  preco_medio: 35.07
+                  preco_minimo: 10.00
+                  preco_maximo: 59.99
+
+  /api/stats/category/{category}:
+    get:
+      tags:
+        - Estatísticas
+      summary: Estatísticas por categoria
+      description: Retorna estatísticas dos livros de uma categoria específica.
       parameters:
-        - name: id
+        - name: category
           in: path
+          description: Nome da categoria
           required: true
-          description: The ID of the book
           schema:
             type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Book'
+          example: "Travel"
       responses:
         '200':
-          description: Book updated
+          description: Estatísticas da categoria
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Book'
+                $ref: '#/components/schemas/StatsCategoriaResponse'
+              example:
+                estado: sucesso
+                dados:
+                  total_livros: 11
+                  preco_medio: 42.50
+                  preco_minimo: 15.00
+                  preco_maximo: 55.00
+                  categoria: "Travel"
         '404':
-          description: Book not found
-    delete:
-      summary: Delete a book by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: The ID of the book
-          schema:
-            type: string
-      responses:
-        '204':
-          description: Book deleted
-        '404':
-          description: Book not found
-  /health:
-    get:
-      summary: Health check
-      responses:
-        '200':
-          description: API is running
-  /stats:
-    get:
-      summary: Get statistics about books
-      responses:
-        '200':
-          description: Statistics about books
+          description: Categoria não encontrada
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  totalBooks:
-                    type: integer
-                  averageRating:
-                    type: number
-                    format: float
+                $ref: '#/components/schemas/ErroResponse'
+              example:
+                estado: erro
+                mensagem: "Categoria não encontrada"
+
+  /api/health:
+    get:
+      tags:
+        - Saúde
+      summary: Verificar saúde da API
+      description: Retorna o estado operacional da API.
+      responses:
+        '200':
+          description: API operacional
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                estado: sucesso
+                dados:
+                  servico: "api-livros"
+                  estado: "operacional"
+
+  /api/ping:
+    get:
+      tags:
+        - Saúde
+      summary: Teste de conectividade
+      description: Endpoint simples para testar conectividade com a API.
+      responses:
+        '200':
+          description: Conexão OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PingResponse'
+              example:
+                estado: sucesso
+                dados: "pong"
+
 components:
   schemas:
     Book:
       type: object
       properties:
-        id:
-          type: string
         title:
           type: string
-        author:
-          type: string
-        genre:
-          type: string
+          description: Título do livro
+          example: "A Light in the Attic"
         price:
-          type: string
-        rating:
           type: number
           format: float
-        description:
+          description: Preço do livro em libras (£)
+          example: 51.77
+        availability:
           type: string
-        imageUrl:
+          description: Disponibilidade do livro
+          example: "In stock"
+        rating:
+          type: integer
+          minimum: 0
+          maximum: 5
+          description: Avaliação do livro (0-5 estrelas)
+          example: 3
+        category:
           type: string
+          description: Categoria do livro
+          example: "Poetry"
+
+    ListaBooksResponse:
+      type: object
+      properties:
+        estado:
+          type: string
+          enum: [sucesso]
+          example: sucesso
+        dados:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book'
+        meta:
+          type: object
+          properties:
+            pagina:
+              type: integer
+              example: 1
+            por_pagina:
+              type: integer
+              example: 20
+            total_itens:
+              type: integer
+              example: 100
+            total_paginas:
+              type: integer
+              example: 5
+
+    BookResponse:
+      type: object
+      properties:
+        estado:
+          type: string
+          enum: [sucesso]
+          example: sucesso
+        dados:
+          $ref: '#/components/schemas/Book'
+
+    CategoriasResponse:
+      type: object
+      properties:
+        estado:
+          type: string
+          enum: [sucesso]
+          example: sucesso
+        dados:
+          type: array
+          items:
+            type: string
+          example: ["Travel", "Mystery", "Historical Fiction"]
+
+    StatsResponse:
+      type: object
+      properties:
+        estado:
+          type: string
+          enum: [sucesso]
+          example: sucesso
+        dados:
+          type: object
+          properties:
+            total_livros:
+              type: integer
+              example: 100
+            preco_medio:
+              type: number
+              format: float
+              example: 35.07
+            preco_minimo:
+              type: number
+              format: float
+              example: 10.00
+            preco_maximo:
+              type: number
+              format: float
+              example: 59.99
+
+    StatsCategoriaResponse:
+      type: object
+      properties:
+        estado:
+          type: string
+          enum: [sucesso]
+          example: sucesso
+        dados:
+          type: object
+          properties:
+            total_livros:
+              type: integer
+              example: 11
+            preco_medio:
+              type: number
+              format: float
+              example: 42.50
+            preco_minimo:
+              type: number
+              format: float
+              example: 15.00
+            preco_maximo:
+              type: number
+              format: float
+              example: 55.00
+            categoria:
+              type: string
+              example: "Travel"
+
+    HealthResponse:
+      type: object
+      properties:
+        estado:
+          type: string
+          enum: [sucesso]
+          example: sucesso
+        dados:
+          type: object
+          properties:
+            servico:
+              type: string
+              example: "api-livros"
+            estado:
+              type: string
+              example: "operacional"
+
+    PingResponse:
+      type: object
+      properties:
+        estado:
+          type: string
+          enum: [sucesso]
+          example: sucesso
+        dados:
+          type: string
+          example: "pong"
+
+    ErroResponse:
+      type: object
+      properties:
+        estado:
+          type: string
+          enum: [erro]
+          example: erro
+        mensagem:
+          type: string
+          example: "Descrição do erro"

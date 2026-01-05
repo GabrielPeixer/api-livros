@@ -1,33 +1,72 @@
-# API de Recomendação de Livros
+# API de Livros 
 
-Este projeto fornece uma API para consultar dados de livros extraídos do site [Books to Scrape](https://books.toscrape.com/). O projeto foi refatorado seguindo boas práticas de desenvolvimento Python.
+API RESTful para consulta de dados de livros extraídos do site [Books to Scrape](https://books.toscrape.com/).
 
-## Estrutura do Projeto
+## Descrição do Projeto
 
-- `src/api`: Código da API Flask.
-- `src/core`: Configurações centrais e utilitários.
-- `src/scraping`: Scripts de web scraping.
-- `data`: Armazenamento de dados (CSV).
-- `tests`: Testes automatizados.
+Este projeto implementa um sistema completo de extração e consulta de dados de livros, composto por:
 
-## Configuração do Ambiente
+1. Web Scraping: Script automatizado que extrai dados de livros do site Books to Scrape
+2. Armazenamento: Dados salvos localmente em arquivo CSV
+3. API REST: Endpoints para consulta de livros, categorias e estatísticas
+4. Documentação: Swagger UI para explorar e testar a API
 
-### 1. Pré-requisitos
+## Arquitetura do Projeto
 
-- Python 3.8 ou superior.
-- Git.
+```
+api-livros/
+├── src/
+│   ├── api/              # Código da API Flask
+│   │   ├── main.py       # Ponto de entrada e factory
+│   │   ├── utils.py      # Funções auxiliares
+│   │   ├── schemas.py    # Esquemas de dados
+│   │   └── routers/      # Endpoints organizados por domínio
+│   │       ├── books.py  # Rotas de livros
+│   │       ├── stats.py  # Rotas de estatísticas
+│   │       └── health.py # Rotas de saúde
+│   ├── scraping/         # Código de web scraping
+│   │   ├── scraper.py    # Extrator de dados
+│   │   ├── pipeline.py   # Pipeline de execução
+│   │   └── storage.py    # Persistência em CSV
+│   └── core/             # Configurações centrais
+│       ├── config.py     # Variáveis de ambiente
+│       ├── cache.py      # Cache com Flask-Caching
+│       ├── db.py         # Configuração do banco
+│       └── logging_config.py  # Configuração de logs
+├── data/
+│   └── books.csv         # Dados extraídos
+├── docs/
+│   ├── index.html        # Swagger UI
+│   ├── openapi.yaml      # Especificação OpenAPI
+│   └── openapi.json      # Especificação em JSON
+├── tests/                # Testes automatizados
+├── requirements.txt      # Dependências
+└── README.md
+```
 
-### 2. Criar um Ambiente Virtual
+## Instalação e Configuração
 
-Recomendamos o uso de um ambiente virtual para isolar as dependências.
+### Pré-requisitos
 
-**Windows:**
+- Python 3.8 ou superior
+- Git
+
+### 1. Clonar o Repositório
+
+```bash
+git clone https://github.com/GabrielPeixer/api-livros.git
+cd api-livros
+```
+
+### 2. Criar Ambiente Virtual
+
+Windows:
 ```bash
 python -m venv venv
 .\venv\Scripts\activate
 ```
 
-**Linux/macOS:**
+Linux/macOS:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
@@ -41,13 +80,13 @@ pip install -r requirements.txt
 
 ### 4. Configurar Variáveis de Ambiente
 
-Copie o arquivo de exemplo `.env.example` para `.env` e ajuste conforme necessário.
+Copie o arquivo `.env.example` para `.env`:
 
 ```bash
 cp .env.example .env
 ```
 
-Exemplo de variáveis no `.env`:
+Variáveis disponíveis:
 ```ini
 API_HOST=0.0.0.0
 API_PORT=5000
@@ -57,17 +96,15 @@ SITE_URL=https://books.toscrape.com/
 
 ## Execução
 
-### 1. Coleta de Dados (Scraping)
-
-Para coletar os dados dos livros e salvar em `data/books.csv`:
+### 1. Coletar Dados (Web Scraping)
 
 ```bash
 python src/scraping/scraper.py
 ```
 
-### 2. Executar a API
+Os dados serão salvos em `data/books.csv`.
 
-Para iniciar o servidor de desenvolvimento:
+### 2. Iniciar a API
 
 ```bash
 python src/api/main.py
@@ -75,20 +112,317 @@ python src/api/main.py
 
 A API estará disponível em `http://localhost:5000`.
 
+### 3. Acessar Documentação
+
+Abra `http://localhost:5000/docs` para acessar o Swagger UI.
+
 ## Documentação da API
 
-A documentação interativa (Swagger UI) está disponível em:
-`http://localhost:5000/docs`
+### Endpoints Disponíveis
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/api/books/` | Lista todos os livros (paginado) |
+| `GET` | `/api/books/{title}` | Busca livro por título |
+| `GET` | `/api/books/categories` | Lista todas as categorias |
+| `GET` | `/api/stats/` | Estatísticas gerais |
+| `GET` | `/api/stats/category/{category}` | Estatísticas por categoria |
+| `GET` | `/api/health` | Verificação de saúde |
+| `GET` | `/api/ping` | Teste de conectividade |
+
+---
+
+### `GET /api/books/`
+
+Lista todos os livros com paginação.
+
+Parâmetros de Query:
+| Parâmetro | Tipo | Padrão | Descrição |
+|-----------|------|--------|-----------|
+| `page` | integer | 1 | Número da página |
+| `per_page` | integer | 20 | Itens por página |
+
+Exemplo de Request:
+```bash
+curl "http://localhost:5000/api/books/?page=1&per_page=5"
+```
+
+Exemplo de Response (200 OK):
+```json
+{
+  "estado": "sucesso",
+  "dados": [
+    {
+      "title": "A Light in the Attic",
+      "price": 51.77,
+      "availability": "In stock",
+      "rating": 3,
+      "category": "Poetry"
+    },
+    {
+      "title": "Tipping the Velvet",
+      "price": 53.74,
+      "availability": "In stock",
+      "rating": 1,
+      "category": "Historical Fiction"
+    }
+  ],
+  "meta": {
+    "pagina": 1,
+    "por_pagina": 5,
+    "total_itens": 100,
+    "total_paginas": 20
+  }
+}
+```
+
+---
+
+### `GET /api/books/{title}`
+
+Busca um livro pelo título (case insensitive).
+
+Parâmetros de Path:
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-----------|
+| `title` | string | Título do livro |
+
+Exemplo de Request:
+```bash
+curl "http://localhost:5000/api/books/A%20Light%20in%20the%20Attic"
+```
+
+Exemplo de Response (200 OK):
+```json
+{
+  "estado": "sucesso",
+  "dados": {
+    "title": "A Light in the Attic",
+    "price": 51.77,
+    "availability": "In stock",
+    "rating": 3,
+    "category": "Poetry"
+  }
+}
+```
+
+Exemplo de Response (404 Not Found):
+```json
+{
+  "estado": "erro",
+  "mensagem": "Livro não encontrado"
+}
+```
+
+---
+
+### `GET /api/books/categories`
+
+Lista todas as categorias disponíveis.
+
+Exemplo de Request:
+```bash
+curl "http://localhost:5000/api/books/categories"
+```
+
+Exemplo de Response (200 OK):
+```json
+{
+  "estado": "sucesso",
+  "dados": [
+    "Travel",
+    "Mystery",
+    "Historical Fiction",
+    "Sequential Art",
+    "Classics",
+    "Philosophy",
+    "Romance",
+    "Poetry"
+  ]
+}
+```
+
+---
+
+### `GET /api/stats/`
+
+Retorna estatísticas gerais sobre todos os livros.
+
+Exemplo de Request:
+```bash
+curl "http://localhost:5000/api/stats/"
+```
+
+Exemplo de Response (200 OK):
+```json
+{
+  "estado": "sucesso",
+  "dados": {
+    "total_livros": 100,
+    "preco_medio": 35.07,
+    "preco_minimo": 10.00,
+    "preco_maximo": 59.99
+  }
+}
+```
+
+---
+
+### `GET /api/stats/category/{category}`
+
+Retorna estatísticas de uma categoria específica.
+
+Parâmetros de Path:
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-----------|
+| `category` | string | Nome da categoria |
+
+Exemplo de Request:
+```bash
+curl "http://localhost:5000/api/stats/category/Travel"
+```
+
+Exemplo de Response (200 OK):
+```json
+{
+  "estado": "sucesso",
+  "dados": {
+    "total_livros": 11,
+    "preco_medio": 42.50,
+    "preco_minimo": 15.00,
+    "preco_maximo": 55.00,
+    "categoria": "Travel"
+  }
+}
+```
+
+Exemplo de Response (404 Not Found):
+```json
+{
+  "estado": "erro",
+  "mensagem": "Categoria não encontrada"
+}
+```
+
+---
+
+### `GET /api/health`
+
+Verifica se a API está operacional.
+
+Exemplo de Request:
+```bash
+curl "http://localhost:5000/api/health"
+```
+
+Exemplo de Response (200 OK):
+```json
+{
+  "estado": "sucesso",
+  "dados": {
+    "servico": "api-livros",
+    "estado": "operacional"
+  }
+}
+```
+
+---
+
+### `GET /api/ping`
+
+Teste simples de conectividade.
+
+Exemplo de Request:
+```bash
+curl "http://localhost:5000/api/ping"
+```
+
+Exemplo de Response (200 OK):
+```json
+{
+  "estado": "sucesso",
+  "dados": "pong"
+}
+```
+
+---
+
+## Exemplos de Uso com Python
+
+### Listar Livros
+
+```python
+import requests
+
+response = requests.get('http://localhost:5000/api/books/', params={
+    'page': 1,
+    'per_page': 10
+})
+
+data = response.json()
+print(f"Total de livros: {data['meta']['total_itens']}")
+
+for livro in data['dados']:
+    print(f"- {livro['title']} (£{livro['price']})")
+```
+
+### Buscar Livro por Título
+
+```python
+import requests
+
+titulo = "A Light in the Attic"
+response = requests.get(f'http://localhost:5000/api/books/{titulo}')
+
+if response.status_code == 200:
+    livro = response.json()['dados']
+    print(f"Título: {livro['title']}")
+    print(f"Preço: £{livro['price']}")
+    print(f"Avaliação: {livro['rating']} estrelas")
+else:
+    print("Livro não encontrado")
+```
+
+### Obter Estatísticas
+
+```python
+import requests
+
+response = requests.get('http://localhost:5000/api/stats/')
+stats = response.json()['dados']
+
+print(f"Total de livros: {stats['total_livros']}")
+print(f"Preço médio: £{stats['preco_medio']:.2f}")
+print(f"Preço mínimo: £{stats['preco_minimo']:.2f}")
+print(f"Preço máximo: £{stats['preco_maximo']:.2f}")
+```
+
+### Estatísticas por Categoria
+
+```python
+import requests
+
+categoria = "Travel"
+response = requests.get(f'http://localhost:5000/api/stats/category/{categoria}')
+
+if response.status_code == 200:
+    stats = response.json()['dados']
+    print(f"Categoria: {stats['categoria']}")
+    print(f"Total de livros: {stats['total_livros']}")
+    print(f"Preço médio: £{stats['preco_medio']:.2f}")
+else:
+    print("Categoria não encontrada")
+```
 
 ## Testes
 
-Para executar os testes automatizados:
+### Executar Testes
 
 ```bash
-pytest
+pytest tests/
 ```
 
-Para verificar o estilo do código (Linting):
+### Verificar Estilo de Código
 
 ```bash
 flake8 src tests
@@ -96,86 +430,27 @@ flake8 src tests
 
 ## Deploy
 
-Para implantar em produção:
+### Produção com Waitress (Windows)
 
-1.  Certifique-se de que `DEBUG=False` no arquivo `.env`.
-2.  Use um servidor WSGI como Gunicorn ou Waitress (Windows).
-
-**Exemplo com Waitress (Windows):**
 ```bash
 pip install waitress
 waitress-serve --port=5000 --call src.api.main:create_app
 ```
 
-**Exemplo com Gunicorn (Linux):**
+### Produção com Gunicorn (Linux)
+
 ```bash
 pip install gunicorn
 gunicorn -w 4 -b 0.0.0.0:5000 "src.api.main:create_app()"
 ```
 
-## Desenvolvimento
-
-- **Linting:** O código segue o estilo PEP 8. Recomendamos usar `flake8` ou `black` para manter a consistência.
-- **Logs:** Logs estruturados são gerados no console e (opcionalmente) em arquivos, configurados em `src/core/logging_config.py`.
-- `GET /api/stats/` - Mostra estatísticas gerais (total de livros, preços, etc)
-- `GET /api/stats/category/<categoria>` - Estatísticas de uma categoria específica
-
-## Estrutura do Projeto
-
-```
-book-recommendation-api/
-├── src/
-│   ├── api/              # Código da API Flask
-│   │   ├── main.py       # Arquivo principal da API
-│   │   └── routers/      # Rotas/endpoints
-│   ├── scraping/         # Código de web scraping
-│   │   ├── scraper.py    # Script que extrai os dados
-│   │   └── storage.py    # Salva os dados em CSV
-│   └── core/             # Configurações
-├── data/
-│   └── books.csv         # Dados extraídos
-├── docs/
-│   └── openapi.yaml      # Documentação da API
-├── tests/                # Testes
-└── requirements.txt      # Bibliotecas necessárias
-```
-
-## O que o projeto faz?
-
-1. Web Scraping: Extrai dados de livros do site books.toscrape.com
-2. Armazena em CSV**: Salva os dados localmente para consulta
-3. API REST: Disponibiliza os dados através de endpoints HTTP
-4. Documentação: Swagger automático para testar a API
-
-## Exemplos de Uso
-
-### Listar livros (com Python)
-```python
-import requests
-
-response = requests.get('http://localhost:5000/api/books/')
-livros = response.json()
-print(livros)
-```
-
-### Ver estatísticas
-```python
-import requests
-
-response = requests.get('http://localhost:5000/api/stats/')
-stats = response.json()
-print(f"Total de livros: {stats['total_livros']}")
-print(f"Preço médio: {stats['preco_medio']}")
-```
-
-## Rodar os testes
-
-```bash
-pytest tests/
-```
-
 ## Notas
 
-- O scraping é limitado a 5 páginas por padrão (pode mudar no código)
+- O scraping é limitado a 5 páginas por padrão (configurável no código)
 - Os dados são salvos em `data/books.csv`
-- A API roda na porta 5000
+- A API roda na porta 5000 por padrão
+- Cache de 5 minutos (300 segundos) em endpoints de listagem
+
+## Licença
+
+Este projeto está licenciado sob a licença MIT.
