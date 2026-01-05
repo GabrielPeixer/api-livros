@@ -300,6 +300,44 @@
         }
       }
     },
+    "/api/v1/stats/overview": {
+      "get": {
+        "tags": [
+          "Estatísticas"
+        ],
+        "summary": "Overview estatístico completo",
+        "description": "Retorna estatísticas gerais da coleção incluindo total de livros, preço médio e distribuição de ratings.",
+        "responses": {
+          "200": {
+            "description": "Overview estatístico",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsOverviewResponse"
+                },
+                "example": {
+                  "estado": "sucesso",
+                  "dados": {
+                    "total_livros": 100,
+                    "preco_medio": 35.07,
+                    "preco_minimo": 10.0,
+                    "preco_maximo": 59.99,
+                    "distribuicao_ratings": {
+                      "1_estrela": 15,
+                      "2_estrelas": 20,
+                      "3_estrelas": 30,
+                      "4_estrelas": 25,
+                      "5_estrelas": 10
+                    },
+                    "total_categorias": 50
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/stats/category/{category}": {
       "get": {
         "tags": [
@@ -569,6 +607,60 @@
               "preco_maximo": {
                 "type": "number",
                 "format": "float"
+              }
+            }
+          }
+        }
+      },
+      "StatsOverviewResponse": {
+        "type": "object",
+        "properties": {
+          "estado": {
+            "type": "string",
+            "enum": [
+              "sucesso"
+            ]
+          },
+          "dados": {
+            "type": "object",
+            "properties": {
+              "total_livros": {
+                "type": "integer"
+              },
+              "preco_medio": {
+                "type": "number",
+                "format": "float"
+              },
+              "preco_minimo": {
+                "type": "number",
+                "format": "float"
+              },
+              "preco_maximo": {
+                "type": "number",
+                "format": "float"
+              },
+              "distribuicao_ratings": {
+                "type": "object",
+                "properties": {
+                  "1_estrela": {
+                    "type": "integer"
+                  },
+                  "2_estrelas": {
+                    "type": "integer"
+                  },
+                  "3_estrelas": {
+                    "type": "integer"
+                  },
+                  "4_estrelas": {
+                    "type": "integer"
+                  },
+                  "5_estrelas": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "total_categorias": {
+                "type": "integer"
               }
             }
           }

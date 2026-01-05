@@ -60,6 +60,82 @@ def get_stats() -> Tuple[Response, int]:
         )
 
 
+@router.route('/overview', methods=['GET'])
+@cache.cached(timeout=300)
+def get_stats_overview() -> Tuple[Response, int]:
+    """
+    Retorna estatísticas gerais da coleção com distribuição de ratings.
+
+    ---
+    get:
+      description: Estatísticas gerais (total, preço médio, distribuição ratings)
+      responses:
+        200:
+          description: Overview estatístico completo
+    """
+    try:
+        # Carrega a lista de livros
+        livros = carregar_livros()
+
+        if not livros:
+            return resposta_sucesso(dados={
+                "total_livros": 0,
+                "preco_medio": 0.0,
+                "preco_minimo": 0.0,
+                "preco_maximo": 0.0,
+                "distribuicao_ratings": {
+                    "1_estrela": 0,
+                    "2_estrelas": 0,
+                    "3_estrelas": 0,
+                    "4_estrelas": 0,
+                    "5_estrelas": 0
+                },
+                "total_categorias": 0
+            })
+
+        # Calcula estatísticas de preço
+        stats = estatisticas_precos(livros)
+
+        # Calcula distribuição de ratings
+        distribuicao_ratings = {
+            "1_estrela": 0,
+            "2_estrelas": 0,
+            "3_estrelas": 0,
+            "4_estrelas": 0,
+            "5_estrelas": 0
+        }
+
+        for livro in livros:
+            rating = livro.get('rating', 0)
+            if rating == 1:
+                distribuicao_ratings["1_estrela"] += 1
+            elif rating == 2:
+                distribuicao_ratings["2_estrelas"] += 1
+            elif rating == 3:
+                distribuicao_ratings["3_estrelas"] += 1
+            elif rating == 4:
+                distribuicao_ratings["4_estrelas"] += 1
+            elif rating == 5:
+                distribuicao_ratings["5_estrelas"] += 1
+
+        # Adiciona distribuição ao stats
+        stats["distribuicao_ratings"] = distribuicao_ratings
+
+        # Conta categorias únicas
+        categorias = lista_categorias(livros)
+        stats["total_categorias"] = len(categorias)
+
+        # Retorna as estatísticas
+        return resposta_sucesso(dados=stats)
+
+    except Exception as e:
+        logger.error(f"Erro ao calcular overview: {e}")
+        return resposta_erro(
+            "Erro ao calcular estatísticas.",
+            codigo_status=500
+        )
+
+
 @router.route('/category/<string:category>', methods=['GET'])
 def get_category_stats(category: str) -> Tuple[Response, int]:
     """
