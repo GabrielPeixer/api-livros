@@ -28,6 +28,8 @@ tags:
     description: Categorias de livros
   - name: Estatísticas
     description: Estatísticas sobre os livros
+  - name: Machine Learning
+    description: Pipeline ML-Ready para modelos de Machine Learning
   - name: Saúde
     description: Verificação de saúde da API
 
@@ -319,6 +321,106 @@ paths:
                 estado: sucesso
                 dados: "pong"
 
+  /api/v1/ml/features:
+    get:
+      tags:
+        - Machine Learning
+      summary: Features para ML
+      description: Retorna dados dos livros formatados como features para modelos ML.
+      parameters:
+        - name: limit
+          in: query
+          description: Número máximo de registros
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: Pular N primeiros registros
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Features extraídas
+          content:
+            application/json:
+              example:
+                estado: sucesso
+                dados:
+                  total: 100
+                  retornados: 2
+                  features:
+                    - id: 1
+                      titulo: "A Light in the Attic"
+                      categoria: "Poetry"
+                      preco: 51.77
+                      rating: 3
+                      em_estoque: true
+        '404':
+          description: Nenhum livro encontrado
+
+  /api/v1/ml/training-data:
+    get:
+      tags:
+        - Machine Learning
+      summary: Dataset para treinamento
+      description: Retorna dados para treinar modelo de ML.
+      parameters:
+        - name: target
+          in: query
+          description: Campo alvo (rating ou price)
+          required: false
+          schema:
+            type: string
+            default: rating
+      responses:
+        '200':
+          description: Dataset de treinamento
+          content:
+            application/json:
+              example:
+                estado: sucesso
+                dados:
+                  features:
+                    - [51.77, 3]
+                    - [53.74, 1]
+                  labels: [3, 1]
+                  num_amostras: 100
+                  colunas: ["preco", "rating"]
+        '404':
+          description: Nenhum livro encontrado
+
+  /api/v1/ml/predictions:
+    post:
+      tags:
+        - Machine Learning
+      summary: Receber predições
+      description: Recebe predições de um modelo externo.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              model_name: "meu_modelo"
+              predictions:
+                - book_id: 1
+                  rating: 4
+      responses:
+        '200':
+          description: Predições recebidas
+          content:
+            application/json:
+              example:
+                estado: sucesso
+                dados:
+                  mensagem: "Predições recebidas"
+                  modelo: "meu_modelo"
+                  quantidade: 1
+        '400':
+          description: Dados inválidos
+
 components:
   schemas:
     Book:
@@ -532,3 +634,92 @@ components:
           enum: [erro]
         mensagem:
           type: string
+
+    MLFeature:
+      type: object
+      description: Feature de um livro para ML
+      properties:
+        id:
+          type: integer
+        titulo:
+          type: string
+        categoria:
+          type: string
+        preco:
+          type: number
+        rating:
+          type: integer
+        em_estoque:
+          type: boolean
+
+    MLFeaturesResponse:
+      type: object
+      properties:
+        estado:
+          type: string
+        dados:
+          type: object
+          properties:
+            total:
+              type: integer
+            retornados:
+              type: integer
+            features:
+              type: array
+              items:
+                $ref: '#/components/schemas/MLFeature'
+
+    MLTrainingDataResponse:
+      type: object
+      properties:
+        estado:
+          type: string
+        dados:
+          type: object
+          properties:
+            features:
+              type: array
+              items:
+                type: array
+                items:
+                  type: number
+            labels:
+              type: array
+              items:
+                type: number
+            num_amostras:
+              type: integer
+            colunas:
+              type: array
+              items:
+                type: string
+
+    MLPredictionsRequest:
+      type: object
+      required:
+        - model_name
+        - predictions
+      properties:
+        model_name:
+          type: string
+        predictions:
+          type: array
+          items:
+            type: object
+
+    MLPredictionsResponse:
+      type: object
+      properties:
+        estado:
+          type: string
+        dados:
+          type: object
+          properties:
+            mensagem:
+              type: string
+            modelo:
+              type: string
+            quantidade:
+              type: integer
+
+              type: string

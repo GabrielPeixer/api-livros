@@ -45,6 +45,12 @@ api-livros/
 └── README.md
 ```
 
+### Diagrama Arquitetural Completo
+
+![Arquitetura da API](docs/arquitetura.png)
+
+*Para versão SVG editável, veja [aqui](docs/arquitetura.svg)*
+
 ## Instalação e Configuração
 
 ### Pré-requisitos
@@ -137,6 +143,14 @@ Abra `http://localhost:5000/docs` para acessar o Swagger UI.
 | `GET` | `/api/v1/stats/overview` | Visão geral: total, preço médio, distribuição de ratings |
 | `GET` | `/api/v1/stats/category/{category}` | Estatísticas por categoria |
 | `GET` | `/api/v1/ping` | Teste de conectividade |
+
+### Pipeline ML-Ready
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/api/v1/ml/features` | Dados formatados como features para modelos ML |
+| `GET` | `/api/v1/ml/training-data` | Dataset completo para treinamento de modelos |
+| `POST` | `/api/v1/ml/predictions` | Receber predições de modelos externos |
 
 ---
 
@@ -399,6 +413,134 @@ Exemplo de Response (200 OK):
     "preco_minimo": 15.00,
     "preco_maximo": 55.00,
     "categoria": "Travel"
+  }
+}
+```
+
+---
+
+## 🤖 Pipeline ML-Ready
+
+Endpoints otimizados para integração com modelos de Machine Learning.
+
+### `GET /api/v1/ml/features`
+
+Retorna dados dos livros formatados como features para modelos ML.
+
+**Parâmetros de Query:**
+| Parâmetro | Tipo | Padrão | Descrição |
+|-----------|------|--------|-----------|
+| `limit` | integer | - | Número máximo de registros |
+| `offset` | integer | 0 | Pular N primeiros registros |
+
+**Exemplo de Request:**
+```bash
+curl "http://localhost:5000/api/v1/ml/features?limit=2"
+```
+
+**Exemplo de Response (200 OK):**
+```json
+{
+  "estado": "sucesso",
+  "dados": {
+    "total_registros": 100,
+    "registros_retornados": 2,
+    "offset": 0,
+    "limit": 2,
+    "features": [
+      {
+        "id": 1,
+        "titulo": "A Light in the Attic",
+        "categoria": "Poetry",
+        "preco": 51.77,
+        "rating_numerico": 3,
+        "rating_normalizado": 0.6,
+        "em_estoque": true,
+        "quantidade_estoque": 22,
+        "titulo_tamanho": 20,
+        "categoria_encoded": 456
+      }
+    ]
+  }
+}
+```
+
+---
+
+### `GET /api/v1/ml/training-data`
+
+Retorna dataset formatado para treinamento de modelos ML.
+
+**Parâmetros de Query:**
+| Parâmetro | Tipo | Padrão | Descrição |
+|-----------|------|--------|-----------|
+| `format` | string | json | Formato do output (json, array) |
+| `target` | string | rating | Campo alvo (rating, price) |
+
+**Exemplo de Request:**
+```bash
+curl "http://localhost:5000/api/v1/ml/training-data?target=rating"
+```
+
+**Exemplo de Response (200 OK):**
+```json
+{
+  "estado": "sucesso",
+  "dados": {
+    "feature_names": ["preco", "rating_numerico", "quantidade_estoque", "titulo_tamanho", "categoria_encoded"],
+    "features": [
+      [51.77, 3, 22, 20, 456],
+      [53.74, 1, 20, 24, 789]
+    ],
+    "labels": [3, 1],
+    "num_samples": 100,
+    "num_features": 5,
+    "target_name": "rating",
+    "task_type": "classification"
+  }
+}
+```
+
+---
+
+### `POST /api/v1/ml/predictions`
+
+Recebe predições de modelos ML externos.
+
+**Body (JSON):**
+| Campo | Tipo | Obrigatório | Descrição |
+|-------|------|-------------|-----------|
+| `model_name` | string | ✅ | Nome do modelo |
+| `model_version` | string | ❌ | Versão do modelo (padrão: 1.0.0) |
+| `predictions` | array | ✅ | Lista de predições |
+| `metadata` | object | ❌ | Metadados adicionais |
+
+**Exemplo de Request:**
+```bash
+curl -X POST "http://localhost:5000/api/v1/ml/predictions" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_name": "book_rating_classifier",
+    "model_version": "1.0.0",
+    "predictions": [
+      {"book_id": 1, "predicted_rating": 4, "confidence": 0.85},
+      {"book_id": 2, "predicted_rating": 3, "confidence": 0.72}
+    ],
+    "metadata": {"training_date": "2024-01-15", "accuracy": 0.89}
+  }'
+```
+
+**Exemplo de Response (200 OK):**
+```json
+{
+  "estado": "sucesso",
+  "dados": {
+    "mensagem": "Predições recebidas com sucesso",
+    "model_name": "book_rating_classifier",
+    "model_version": "1.0.0",
+    "predictions_count": 2,
+    "metadata_received": true,
+    "status": "processed"
   }
 }
 ```
