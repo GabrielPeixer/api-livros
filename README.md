@@ -643,14 +643,91 @@ flake8 src tests
 
 ## Deploy
 
-### Produção com Waitress (Windows)
+### Deploy com Docker
+
+Este projeto inclui um `Dockerfile` otimizado para production. A aplicação é containerizada e pronta para deploy em plataformas cloud.
+
+#### Variáveis de Ambiente para Production
+
+```ini
+FLASK_ENV=production
+DEBUG=False
+API_HOST=0.0.0.0
+API_PORT=5000
+```
+
+#### Build Local (Teste)
+
+```bash
+# Build da imagem
+docker build -t api-livros:latest .
+
+# Executar container
+docker run -p 5000:5000 \
+  -e FLASK_ENV=production \
+  -e DEBUG=False \
+  api-livros:latest
+```
+
+A API estará disponível em `http://localhost:5000/docs`
+
+### Deploy no Railway 
+
+O Railway detecta automaticamente o `Dockerfile` no repositório e faz deploy com mínima configuração.
+
+#### Pré-requisitos
+
+- Repositório GitHub com o projeto
+- Conta no [railway.app](https://railway.app)
+
+#### Passos para Deploy
+
+1. Acesse o Railway
+   - Vá para [railway.app](https://railway.app)
+   - Faça login com sua conta GitHub
+
+2. Crie um Novo Projeto
+   - Clique em **"New Project"**
+   - Selecione **"Deploy from GitHub repo"**
+   - Conecte seu repositório `GabrielPeixer/api-livros`
+
+3. Railway Detectará Automaticamente
+   - O Railway vai identificar o `Dockerfile`
+   - Vai fazer build da imagem
+   - Vai fazer deploy do container
+
+4. Configurar Variáveis de Ambiente (Opcional)
+   - Na aba **"Variables"** do projeto
+   - Adicione as variáveis necessárias:
+     ```
+     FLASK_ENV=production
+     DEBUG=False
+     API_PORT=5000
+     ```
+
+5. Deploy Completo
+   - O Railway automaticamente atribui um domínio público
+   - A URL fica no formato: `https://api-livros-production-xxxx.railway.app`
+   - Acesse `/docs` para a documentação Swagger
+
+#### Redeploy Automático
+
+Cada push para o branch `main` dispara um novo deploy automaticamente.
+
+#### Monitorar Logs
+
+No dashboard do Railway, você pode ver logs em tempo real do container em execução.
+
+---
+
+### Alternativa: Produção com Waitress (Windows)
 
 ```bash
 pip install waitress
 waitress-serve --port=5000 --call src.api.main:create_app
 ```
 
-### Produção com Gunicorn (Linux)
+### Alternativa: Produção com Gunicorn (Linux)
 
 ```bash
 pip install gunicorn
@@ -664,6 +741,9 @@ gunicorn -w 4 -b 0.0.0.0:5000 "src.api.main:create_app()"
 - A API roda na porta 5000 por padrão
 - Cache de 5 minutos (300 segundos) em endpoints de listagem
 - Todos os endpoints usam o prefixo `/api/v1/`
+- **Docker**: Imagem otimizada incluindo base Python 3.11-slim
+- **Railway**: Deploy automático com detecção de Dockerfile
+- **Produção**: FLASK_ENV=production e DEBUG=False ativado automaticamente em container
 
 ## Licença
 

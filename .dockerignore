@@ -1,0 +1,61 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testes
+.pytest_cache
+.coverage
+htmlcov/
+
+# Documentação
+*.md
+docs/
+
+# Railway/Vercel/CI/CD
+.github
+.gitlab-ci.yml
+.env.example
+.env
+
+# Arquivos de sistema
+Thumbs.db
+.DS_Store
+
+# Outros
+node_modules/
+*.log
+.cache/
+instance/

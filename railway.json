@@ -1,0 +1,10 @@
+{
+  "$schema": "https://railway.app/schema/railway.json",
+  "build": {
+    "builder": "DOCKERFILE"
+  },
+  "deploy": {
+    "restartPolicyMaxRetries": 5,
+    "restartPolicyWindowSeconds": 60
+  }
+}
