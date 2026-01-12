@@ -40,9 +40,8 @@ wheels/
 .coverage
 htmlcov/
 
-# Documentação
+# Documentação (markdown files, mas MANTER docs/ folder para a API)
 *.md
-docs/
 
 # Railway/Vercel/CI/CD
 .github

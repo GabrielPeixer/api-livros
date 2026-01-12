@@ -42,13 +42,23 @@ def create_app():
     @app.route('/docs')
     def docs():
         """Serve a documentação Swagger."""
-        docs_dir = Path(app.root_path).parents[1] / 'docs'
+        # Obtém o diretório raiz do projeto (pai de src)
+        project_root = Path(__file__).resolve().parents[2]
+        docs_dir = project_root / 'docs'
+        if not docs_dir.exists():
+            logger.error(f"Diretório docs não encontrado: {docs_dir}")
+            return {"erro": "Documentação não encontrada"}, 404
         return send_from_directory(docs_dir, 'index.html')
 
     @app.route('/openapi.json')
     def openapi_spec():
         """Serve a especificação OpenAPI."""
-        docs_dir = Path(app.root_path).parents[1] / 'docs'
+        # Obtém o diretório raiz do projeto (pai de src)
+        project_root = Path(__file__).resolve().parents[2]
+        docs_dir = project_root / 'docs'
+        if not docs_dir.exists():
+            logger.error(f"Diretório docs não encontrado: {docs_dir}")
+            return {"erro": "Especificação não encontrada"}, 404
         return send_from_directory(docs_dir, 'openapi.json')
 
     return app
