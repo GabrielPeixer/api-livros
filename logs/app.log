@@ -1,0 +1,130 @@
+2026-01-12 18:49:38,006 - root - INFO - Logging configured with level INFO
+2026-01-12 18:49:38,008 - __main__ - INFO - Buscando robots.txt de https://books.toscrape.com/robots.txt
+2026-01-12 18:49:38,790 - __main__ - INFO - Iniciando extração de https://books.toscrape.com/ por 5 páginas.
+2026-01-12 18:49:38,791 - __main__ - INFO - Extraindo página 1: https://books.toscrape.com/catalogue/page-1.html
+2026-01-12 18:49:40,087 - __main__ - WARNING - Formato de preço inválido para 'A Light in the Attic': Â51.77
+2026-01-12 18:49:40,240 - __main__ - WARNING - Formato de preço inválido para 'Tipping the Velvet': Â53.74
+2026-01-12 18:49:40,396 - __main__ - WARNING - Formato de preço inválido para 'Soumission': Â50.10
+2026-01-12 18:49:40,558 - __main__ - WARNING - Formato de preço inválido para 'Sharp Objects': Â47.82
+2026-01-12 18:49:40,738 - __main__ - WARNING - Formato de preço inválido para 'Sapiens: A Brief History of Humankind': Â54.23
+2026-01-12 18:49:40,945 - __main__ - WARNING - Formato de preço inválido para 'The Requiem Red': Â22.65
+2026-01-12 18:49:41,152 - __main__ - WARNING - Formato de preço inválido para 'The Dirty Little Secrets of Getting Your Dream Job': Â33.34
+2026-01-12 18:49:41,358 - __main__ - WARNING - Formato de preço inválido para 'The Coming Woman: A Novel Based on the Life of the Infamous Feminist, Victoria Woodhull': Â17.93
+2026-01-12 18:49:41,561 - __main__ - WARNING - Formato de preço inválido para 'The Boys in the Boat: Nine Americans and Their Epic Quest for Gold at the 1936 Berlin Olympics': Â22.60
+2026-01-12 18:49:41,775 - __main__ - WARNING - Formato de preço inválido para 'The Black Maria': Â52.15
+2026-01-12 18:49:41,981 - __main__ - WARNING - Formato de preço inválido para 'Starving Hearts (Triangular Trade Trilogy, #1)': Â13.99
+2026-01-12 18:49:42,176 - __main__ - WARNING - Formato de preço inválido para 'Shakespeare's Sonnets': Â20.66
+2026-01-12 18:49:42,381 - __main__ - WARNING - Formato de preço inválido para 'Set Me Free': Â17.46
+2026-01-12 18:49:42,563 - __main__ - WARNING - Formato de preço inválido para 'Scott Pilgrim's Precious Little Life (Scott Pilgrim #1)': Â52.29
+2026-01-12 18:49:42,790 - __main__ - WARNING - Formato de preço inválido para 'Rip it Up and Start Again': Â35.02
+2026-01-12 18:49:42,996 - __main__ - WARNING - Formato de preço inválido para 'Our Band Could Be Your Life: Scenes from the American Indie Underground, 1981-1991': Â57.25
+2026-01-12 18:49:43,199 - __main__ - WARNING - Formato de preço inválido para 'Olio': Â23.88
+2026-01-12 18:49:43,406 - __main__ - WARNING - Formato de preço inválido para 'Mesaerion: The Best Science Fiction Stories 1800-1849': Â37.59
+2026-01-12 18:49:43,612 - __main__ - WARNING - Formato de preço inválido para 'Libertarianism for Beginners': Â51.33
+2026-01-12 18:49:43,816 - __main__ - WARNING - Formato de preço inválido para 'It's Only the Himalayas': Â45.17
+2026-01-12 18:49:44,127 - __main__ - INFO - Encontrados 20 livros na página 1.
+2026-01-12 18:49:45,128 - __main__ - INFO - Extraindo página 2: https://books.toscrape.com/catalogue/page-2.html
+2026-01-12 18:49:45,781 - __main__ - WARNING - Formato de preço inválido para 'In Her Wake': Â12.84
+2026-01-12 18:49:45,942 - __main__ - WARNING - Formato de preço inválido para 'How Music Works': Â37.32
+2026-01-12 18:49:46,104 - __main__ - WARNING - Formato de preço inválido para 'Foolproof Preserving: A Guide to Small Batch Jams, Jellies, Pickles, Condiments, and More: A Foolproof Guide to Making Small Batch Jams, Jellies, Pickles, Condiments, and More': Â30.52
+2026-01-12 18:49:46,273 - __main__ - WARNING - Formato de preço inválido para 'Chase Me (Paris Nights #2)': Â25.27
+2026-01-12 18:49:46,439 - __main__ - WARNING - Formato de preço inválido para 'Black Dust': Â34.53
+2026-01-12 18:49:46,678 - __main__ - WARNING - Formato de preço inválido para 'Birdsong: A Story in Pictures': Â54.64
+2026-01-12 18:49:46,887 - __main__ - WARNING - Formato de preço inválido para 'America's Cradle of Quarterbacks: Western Pennsylvania's Football Factory from Johnny Unitas to Joe Montana': Â22.50
+2026-01-12 18:49:47,091 - __main__ - WARNING - Formato de preço inválido para 'Aladdin and His Wonderful Lamp': Â53.13
+2026-01-12 18:49:47,298 - __main__ - WARNING - Formato de preço inválido para 'Worlds Elsewhere: Journeys Around Shakespeareâs Globe': Â40.30
+2026-01-12 18:49:47,459 - __main__ - WARNING - Formato de preço inválido para 'Wall and Piece': Â44.18
+2026-01-12 18:49:47,708 - __main__ - WARNING - Formato de preço inválido para 'The Four Agreements: A Practical Guide to Personal Freedom': Â17.66
+2026-01-12 18:49:47,911 - __main__ - WARNING - Formato de preço inválido para 'The Five Love Languages: How to Express Heartfelt Commitment to Your Mate': Â31.05
+2026-01-12 18:49:48,118 - __main__ - WARNING - Formato de preço inválido para 'The Elephant Tree': Â23.82
+2026-01-12 18:49:48,321 - __main__ - WARNING - Formato de preço inválido para 'The Bear and the Piano': Â36.89
+2026-01-12 18:49:48,525 - __main__ - WARNING - Formato de preço inválido para 'Sophie's World': Â15.94
+2026-01-12 18:49:48,726 - __main__ - WARNING - Formato de preço inválido para 'Penny Maybe': Â33.29
+2026-01-12 18:49:48,887 - __main__ - WARNING - Formato de preço inválido para 'Maude (1883-1993):She Grew Up with the country': Â18.02
+2026-01-12 18:49:49,140 - __main__ - WARNING - Formato de preço inválido para 'In a Dark, Dark Wood': Â19.63
+2026-01-12 18:49:49,302 - __main__ - WARNING - Formato de preço inválido para 'Behind Closed Doors': Â52.22
+2026-01-12 18:49:49,552 - __main__ - WARNING - Formato de preço inválido para 'You can't bury them all: Poems': Â33.63
+2026-01-12 18:49:49,743 - __main__ - INFO - Encontrados 20 livros na página 2.
+2026-01-12 18:49:50,744 - __main__ - INFO - Extraindo página 3: https://books.toscrape.com/catalogue/page-3.html
+2026-01-12 18:49:51,308 - __main__ - WARNING - Formato de preço inválido para 'Slow States of Collapse: Poems': Â57.31
+2026-01-12 18:49:51,499 - __main__ - WARNING - Formato de preço inválido para 'Reasons to Stay Alive': Â26.41
+2026-01-12 18:49:51,699 - __main__ - WARNING - Formato de preço inválido para 'Private Paris (Private #10)': Â47.61
+2026-01-12 18:49:51,907 - __main__ - WARNING - Formato de preço inválido para '#HigherSelfie: Wake Up Your Life. Free Your Soul. Find Your Tribe.': Â23.11
+2026-01-12 18:49:52,110 - __main__ - WARNING - Formato de preço inválido para 'Without Borders (Wanderlove #1)': Â45.07
+2026-01-12 18:49:52,315 - __main__ - WARNING - Formato de preço inválido para 'When We Collided': Â31.77
+2026-01-12 18:49:52,475 - __main__ - WARNING - Formato de preço inválido para 'We Love You, Charlie Freeman': Â50.27
+2026-01-12 18:49:52,722 - __main__ - WARNING - Formato de preço inválido para 'Untitled Collection: Sabbath Poems 2014': Â14.27
+2026-01-12 18:49:52,892 - __main__ - WARNING - Formato de preço inválido para 'Unseen City: The Majesty of Pigeons, the Discreet Charm of Snails & Other Wonders of the Urban Wilderness': Â44.18
+2026-01-12 18:49:53,053 - __main__ - WARNING - Formato de preço inválido para 'Unicorn Tracks': Â18.78
+2026-01-12 18:49:53,239 - __main__ - WARNING - Formato de preço inválido para 'Unbound: How Eight Technologies Made Us Human, Transformed Society, and Brought Our World to the Brink': Â25.52
+2026-01-12 18:49:53,441 - __main__ - WARNING - Formato de preço inválido para 'Tsubasa: WoRLD CHRoNiCLE 2 (Tsubasa WoRLD CHRoNiCLE #2)': Â16.28
+2026-01-12 18:49:53,643 - __main__ - WARNING - Formato de preço inválido para 'Throwing Rocks at the Google Bus: How Growth Became the Enemy of Prosperity': Â31.12
+2026-01-12 18:49:53,852 - __main__ - WARNING - Formato de preço inválido para 'This One Summer': Â19.49
+2026-01-12 18:49:54,058 - __main__ - WARNING - Formato de preço inválido para 'Thirst': Â17.27
+2026-01-12 18:49:54,262 - __main__ - WARNING - Formato de preço inválido para 'The Torch Is Passed: A Harding Family Story': Â19.09
+2026-01-12 18:49:54,422 - __main__ - WARNING - Formato de preço inválido para 'The Secret of Dreadwillow Carse': Â56.13
+2026-01-12 18:49:54,577 - __main__ - WARNING - Formato de preço inválido para 'The Pioneer Woman Cooks: Dinnertime: Comfort Classics, Freezer Food, 16-Minute Meals, and Other Delicious Ways to Solve Supper!': Â56.41
+2026-01-12 18:49:54,739 - __main__ - WARNING - Formato de preço inválido para 'The Past Never Ends': Â56.50
+2026-01-12 18:49:54,899 - __main__ - WARNING - Formato de preço inválido para 'The Natural History of Us (The Fine Art of Pretending #2)': Â45.22
+2026-01-12 18:49:55,056 - __main__ - INFO - Encontrados 20 livros na página 3.
+2026-01-12 18:49:56,057 - __main__ - INFO - Extraindo página 4: https://books.toscrape.com/catalogue/page-4.html
+2026-01-12 18:49:56,628 - __main__ - WARNING - Formato de preço inválido para 'The Nameless City (The Nameless City #1)': Â38.16
+2026-01-12 18:49:56,819 - __main__ - WARNING - Formato de preço inválido para 'The Murder That Never Was (Forensic Instincts #5)': Â54.11
+2026-01-12 18:49:57,026 - __main__ - WARNING - Formato de preço inválido para 'The Most Perfect Thing: Inside (and Outside) a Bird's Egg': Â42.96
+2026-01-12 18:49:57,231 - __main__ - WARNING - Formato de preço inválido para 'The Mindfulness and Acceptance Workbook for Anxiety: A Guide to Breaking Free from Anxiety, Phobias, and Worry Using Acceptance and Commitment Therapy': Â23.89
+2026-01-12 18:49:57,435 - __main__ - WARNING - Formato de preço inválido para 'The Life-Changing Magic of Tidying Up: The Japanese Art of Decluttering and Organizing': Â16.77
+2026-01-12 18:49:57,618 - __main__ - WARNING - Formato de preço inválido para 'The Inefficiency Assassin: Time Management Tactics for Working Smarter, Not Longer': Â20.59
+2026-01-12 18:49:57,776 - __main__ - WARNING - Formato de preço inválido para 'The Gutsy Girl: Escapades for Your Life of Epic Adventure': Â37.13
+2026-01-12 18:49:57,941 - __main__ - WARNING - Formato de preço inválido para 'The Electric Pencil: Drawings from Inside State Hospital No. 3': Â56.06
+2026-01-12 18:49:58,164 - __main__ - WARNING - Formato de preço inválido para 'The Death of Humanity: and the Case for Life': Â58.11
+2026-01-12 18:49:58,362 - __main__ - WARNING - Formato de preço inválido para 'The Bulletproof Diet: Lose up to a Pound a Day, Reclaim Energy and Focus, Upgrade Your Life': Â49.05
+2026-01-12 18:49:58,562 - __main__ - WARNING - Formato de preço inválido para 'The Art Forger': Â40.76
+2026-01-12 18:49:58,763 - __main__ - WARNING - Formato de preço inválido para 'The Age of Genius: The Seventeenth Century and the Birth of the Modern Mind': Â19.73
+2026-01-12 18:49:58,969 - __main__ - WARNING - Formato de preço inválido para 'The Activist's Tao Te Ching: Ancient Advice for a Modern Revolution': Â32.24
+2026-01-12 18:49:59,179 - __main__ - WARNING - Formato de preço inválido para 'Spark Joy: An Illustrated Master Class on the Art of Organizing and Tidying Up': Â41.83
+2026-01-12 18:49:59,379 - __main__ - WARNING - Formato de preço inválido para 'Soul Reader': Â39.58
+2026-01-12 18:49:59,544 - __main__ - WARNING - Formato de preço inválido para 'Security': Â39.25
+2026-01-12 18:49:59,735 - __main__ - WARNING - Formato de preço inválido para 'Saga, Volume 6 (Saga (Collected Editions) #6)': Â25.02
+2026-01-12 18:49:59,995 - __main__ - WARNING - Formato de preço inválido para 'Saga, Volume 5 (Saga (Collected Editions) #5)': Â51.04
+2026-01-12 18:50:00,200 - __main__ - WARNING - Formato de preço inválido para 'Reskilling America: Learning to Labor in the Twenty-First Century': Â19.83
+2026-01-12 18:50:00,403 - __main__ - WARNING - Formato de preço inválido para 'Rat Queens, Vol. 3: Demons (Rat Queens (Collected Editions) #11-15)': Â50.40
+2026-01-12 18:50:00,609 - __main__ - INFO - Encontrados 20 livros na página 4.
+2026-01-12 18:50:01,610 - __main__ - INFO - Extraindo página 5: https://books.toscrape.com/catalogue/page-5.html
+2026-01-12 18:50:02,164 - __main__ - WARNING - Formato de preço inválido para 'Princess Jellyfish 2-in-1 Omnibus, Vol. 01 (Princess Jellyfish 2-in-1 Omnibus #1)': Â13.61
+2026-01-12 18:50:02,351 - __main__ - WARNING - Formato de preço inválido para 'Princess Between Worlds (Wide-Awake Princess #5)': Â13.34
+2026-01-12 18:50:02,511 - __main__ - WARNING - Formato de preço inválido para 'Pop Gun War, Volume 1: Gift': Â18.97
+2026-01-12 18:50:02,763 - __main__ - WARNING - Formato de preço inválido para 'Political Suicide: Missteps, Peccadilloes, Bad Calls, Backroom Hijinx, Sordid Pasts, Rotten Breaks, and Just Plain Dumb Mistakes in the Annals of American Politics': Â36.28
+2026-01-12 18:50:02,935 - __main__ - WARNING - Formato de preço inválido para 'Patience': Â10.16
+2026-01-12 18:50:03,097 - __main__ - WARNING - Formato de preço inválido para 'Outcast, Vol. 1: A Darkness Surrounds Him (Outcast #1)': Â15.44
+2026-01-12 18:50:03,270 - __main__ - WARNING - Formato de preço inválido para 'orange: The Complete Collection 1 (orange: The Complete Collection #1)': Â48.41
+2026-01-12 18:50:03,430 - __main__ - WARNING - Formato de preço inválido para 'Online Marketing for Busy Authors: A Step-By-Step Guide': Â46.35
+2026-01-12 18:50:03,680 - __main__ - WARNING - Formato de preço inválido para 'On a Midnight Clear': Â14.07
+2026-01-12 18:50:03,885 - __main__ - WARNING - Formato de preço inválido para 'Obsidian (Lux #1)': Â14.86
+2026-01-12 18:50:04,093 - __main__ - WARNING - Formato de preço inválido para 'My Paris Kitchen: Recipes and Stories': Â33.37
+2026-01-12 18:50:04,298 - __main__ - WARNING - Formato de preço inválido para 'Masks and Shadows': Â56.40
+2026-01-12 18:50:04,501 - __main__ - WARNING - Formato de preço inválido para 'Mama Tried: Traditional Italian Cooking for the Screwed, Crude, Vegan, and Tattooed': Â14.02
+2026-01-12 18:50:04,707 - __main__ - WARNING - Formato de preço inválido para 'Lumberjanes, Vol. 2: Friendship to the Max (Lumberjanes #5-8)': Â46.91
+2026-01-12 18:50:04,910 - __main__ - WARNING - Formato de preço inválido para 'Lumberjanes, Vol. 1: Beware the Kitten Holy (Lumberjanes #1-4)': Â45.61
+2026-01-12 18:50:05,112 - __main__ - WARNING - Formato de preço inválido para 'Lumberjanes Vol. 3: A Terrible Plan (Lumberjanes #9-12)': Â19.92
+2026-01-12 18:50:05,322 - __main__ - WARNING - Formato de preço inválido para 'Layered: Baking, Building, and Styling Spectacular Cakes': Â40.11
+2026-01-12 18:50:05,534 - __main__ - WARNING - Formato de preço inválido para 'Judo: Seven Steps to Black Belt (an Introductory Guide for Beginners)': Â53.90
+2026-01-12 18:50:05,727 - __main__ - WARNING - Formato de preço inválido para 'Join': Â35.67
+2026-01-12 18:50:05,934 - __main__ - WARNING - Formato de preço inválido para 'In the Country We Love: My Family Divided': Â22.00
+2026-01-12 18:50:06,137 - __main__ - INFO - Encontrados 20 livros na página 5.
+2026-01-12 18:50:07,138 - __main__ - INFO - Total de livros extraídos: 100
+2026-01-12 18:50:07,142 - __main__ - INFO - Dados salvos com sucesso em C:\Users\macga\OneDrive\Documentos\book-recommendation-api\data\books.csv
+2026-01-12 18:50:15,647 - root - INFO - Logging configured with level INFO
+2026-01-12 18:50:15,648 - __main__ - INFO - Buscando robots.txt de https://books.toscrape.com/robots.txt
+2026-01-12 18:50:16,209 - __main__ - INFO - Iniciando extração de https://books.toscrape.com/ por 5 páginas.
+2026-01-12 18:50:16,210 - __main__ - INFO - Extraindo página 1: https://books.toscrape.com/catalogue/page-1.html
+2026-01-12 18:50:21,503 - __main__ - INFO - Encontrados 20 livros na página 1.
+2026-01-12 18:50:22,521 - __main__ - INFO - Extraindo página 2: https://books.toscrape.com/catalogue/page-2.html
+2026-01-12 18:50:26,926 - __main__ - INFO - Encontrados 20 livros na página 2.
+2026-01-12 18:50:27,927 - __main__ - INFO - Extraindo página 3: https://books.toscrape.com/catalogue/page-3.html
+2026-01-12 18:50:32,251 - __main__ - INFO - Encontrados 20 livros na página 3.
+2026-01-12 18:50:33,252 - __main__ - INFO - Extraindo página 4: https://books.toscrape.com/catalogue/page-4.html
+2026-01-12 18:50:37,637 - __main__ - INFO - Encontrados 20 livros na página 4.
+2026-01-12 18:50:38,638 - __main__ - INFO - Extraindo página 5: https://books.toscrape.com/catalogue/page-5.html
+2026-01-12 18:50:43,001 - __main__ - INFO - Encontrados 20 livros na página 5.
+2026-01-12 18:50:44,002 - __main__ - INFO - Total de livros extraídos: 100
+2026-01-12 18:50:44,007 - __main__ - INFO - Dados salvos com sucesso em C:\Users\macga\OneDrive\Documentos\book-recommendation-api\data\books.csv

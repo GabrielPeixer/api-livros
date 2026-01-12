@@ -84,11 +84,13 @@ def _processar_pagina(
         try:
             titulo = livro.h3.a.get('title', '').strip()
 
-            preco_bruto = livro.select_one('p.price_color').text.replace(
-                '£', ''
-            ).strip()
+            preco_bruto = livro.select_one('p.price_color').text
+            # Remove símbolos de moeda e caracteres especiais de encoding
+            preco_bruto = preco_bruto.replace('£', '').replace('Â', '').replace('€', '').strip()
+            # Remove qualquer caractere não numérico exceto ponto
+            preco_limpo = ''.join(c for c in preco_bruto if c.isdigit() or c == '.')
             try:
-                preco = float(preco_bruto)
+                preco = float(preco_limpo) if preco_limpo else 0.0
             except ValueError:
                 logger.warning(
                     f"Formato de preço inválido para '{titulo}': {preco_bruto}"
