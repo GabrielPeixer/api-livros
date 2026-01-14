@@ -2,6 +2,12 @@
 
 API RESTful para consulta de dados de livros extraídos do site [Books to Scrape](https://books.toscrape.com/).
 
+## Vídeo de Apresentação
+
+[![Assista ao vídeo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://github.com/GabrielPeixer/api-livros/releases/download/v1.0/apresentacao-api-livros.mp4)
+
+*Clique na imagem acima para assistir ao vídeo de apresentação da API (11 minutos)*
+
 ## Descrição do Projeto
 
 Este projeto implementa um sistema completo de extração e consulta de dados de livros, composto por:

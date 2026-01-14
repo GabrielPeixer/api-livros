@@ -47,7 +47,7 @@ Você pode sobrescrever no Railway dashboard se necessário, na aba **Variables*
 ## Estrutura de Deployment
 
 ```
-Seu Repositório GitHub
+Repositório GitHub
         ↓
 Railway Pull do código
         ↓
