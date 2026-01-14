@@ -2,11 +2,9 @@
 
 API RESTful para consulta de dados de livros extraídos do site [Books to Scrape](https://books.toscrape.com/).
 
-## Vídeo de Apresentação
+## 🎬 Vídeo de Apresentação
 
-[![Assista ao vídeo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://github.com/GabrielPeixer/api-livros/releases/download/v1.0.0/gpeixer_v_final.mp4)
-
-*Clique na imagem acima para assistir ao vídeo de apresentação da API (11 minutos)*
+[📺 **Clique aqui para assistir ao vídeo de apresentação (11 min)**](https://github.com/GabrielPeixer/api-livros/releases/download/v1.0.0/gpeixer_v_final.mp4)
 
 ## Descrição do Projeto
 
