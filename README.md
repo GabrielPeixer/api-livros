@@ -4,7 +4,7 @@ API RESTful para consulta de dados de livros extraídos do site [Books to Scrape
 
 ## Vídeo de Apresentação
 
-[![Assista ao vídeo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://github.com/GabrielPeixer/api-livros/releases/download/v1.0/apresentacao-api-livros.mp4)
+[![Assista ao vídeo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://github.com/GabrielPeixer/api-livros/releases/download/v1.0.0/gpeixer_v_final.mp4)
 
 *Clique na imagem acima para assistir ao vídeo de apresentação da API (11 minutos)*
 
