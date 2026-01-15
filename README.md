@@ -2,6 +2,18 @@
 
 API RESTful para consulta de dados de livros extraídos do site [Books to Scrape](https://books.toscrape.com/).
 
+## API em Produção
+
+Base URL: https://api-livros-production-f911.up.railway.app
+
+| Endpoint | Descrição |
+|----------|-----------|
+| [/docs](https://api-livros-production-f911.up.railway.app/docs) | Documentação Swagger UI |
+| [/api/v1/books](https://api-livros-production-f911.up.railway.app/api/v1/books) | Listar livros |
+| [/api/v1/categories](https://api-livros-production-f911.up.railway.app/api/v1/categories) | Listar categorias |
+| [/api/v1/stats](https://api-livros-production-f911.up.railway.app/api/v1/stats) | Estatísticas gerais |
+| [/api/v1/health](https://api-livros-production-f911.up.railway.app/api/v1/health) | Status da API |
+
 ## 🎬 Vídeo de Apresentação
 
 [📺 **Clique aqui para assistir/baixar o vídeo (11 min)**](https://github.com/GabrielPeixer/api-livros/releases/tag/1.0.0)
