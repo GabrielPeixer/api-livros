@@ -14,7 +14,7 @@ Base URL: https://api-livros-production-f911.up.railway.app
 | [/api/v1/stats](https://api-livros-production-f911.up.railway.app/api/v1/stats) | Estatísticas gerais |
 | [/api/v1/health](https://api-livros-production-f911.up.railway.app/api/v1/health) | Status da API |
 
-## 🎬 Vídeo de Apresentação
+## Vídeo de Apresentação
 
 [📺 **Clique aqui para assistir/baixar o vídeo (11 min)**](https://github.com/GabrielPeixer/api-livros/releases/tag/1.0.0)
 
