@@ -4,7 +4,7 @@ API RESTful para consulta de dados de livros extraídos do site [Books to Scrape
 
 ## API em Produção
 
-Base URL: https://api-livros-production-f911.up.railway.app
+Base URL: https://api-livros-production-f911.up.railway.app/docs
 
 | Endpoint | Descrição |
 |----------|-----------|
